@@ -23,11 +23,9 @@ router.get("/:id", (req, res) => {
   Projects.get(req.params.id)
     .then((project) => {
       if (project) {
-        res
-          .status(200)
-          .json(project.find((project) => project.id == req.params.id));
+        res.status(200).json({ project });
       } else {
-        res.status(404).json({});
+        res.status(404);
       }
     })
     .catch((err) => {
