@@ -86,4 +86,18 @@ router.put("/:id", (req, res) => {
   });
 });
 
+router.delete("/:id", (req, res) => {
+  Actions.remove(req.params.id)
+    .then((action) => {
+      if (action) {
+        res.status(200);
+      } else {
+        res.status(404).json({ message: "action not found" });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
 module.exports = router;
