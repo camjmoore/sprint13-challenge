@@ -23,7 +23,7 @@ router.get("/:id", (req, res) => {
   Projects.get(req.params.id)
     .then((project) => {
       if (project) {
-        res.status(200).json({ project });
+        res.status(200).json(project);
       } else {
         res.status(404);
       }
@@ -44,7 +44,7 @@ router.post("/", (req, res) => {
   Projects.insert(req.body)
     .then((project) => {
       if (project) {
-        res.status(201).json({ project });
+        res.status(201).json(project);
       } else {
         res.status(404);
       }
@@ -65,7 +65,7 @@ router.put("/:id", (req, res) => {
   Projects.update(req.params.id, req.body)
     .then((project) => {
       if (project) {
-        res.status(200).json({ project });
+        res.status(200).json(project);
       } else {
         res.status(404);
       }
