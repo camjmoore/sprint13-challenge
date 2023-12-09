@@ -33,4 +33,46 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.post("/", (req, res) => {
+  const requiredFields = ["name", "description"];
+  const missing = requiredFields.filter((field) => !req.body[field]);
+
+  if (missing.length) {
+    res.status(400);
+  }
+
+  Projects.insert(req.body)
+    .then((project) => {
+      if (project) {
+        res.status(201).json({ project });
+      } else {
+        res.status(404);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.put("/:id", (req, res) => {
+  const requiredFields = ["name", "description"];
+  const missing = requiredFields.filter((field) => !req.body[field]);
+
+  if (missing.length) {
+    res.status(400);
+  }
+
+  Projects.update(req.params.id, req.body)
+    .then((project) => {
+      if (project) {
+        res.status(200).json({ project });
+      } else {
+        res.status(404);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
 module.exports = router;
