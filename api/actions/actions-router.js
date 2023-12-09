@@ -42,21 +42,21 @@ router.post("/", (req, res) => {
 
   Projects.get(req.body.project_id).then((project) => {
     if (!project) {
-      res.status(404);
+      res.status(404).json({ message: "project not found" });
+    } else {
+      Actions.insert(req.body)
+        .then((action) => {
+          if (action) {
+            res.status(201).json(action);
+          } else {
+            res.status(404).json([]);
+          }
+        })
+        .catch((err) => {
+          res.status(500).json({ message: err.message });
+        });
     }
   });
-
-  Actions.insert(req.body)
-    .then((action) => {
-      if (action) {
-        res.status(201).json(action);
-      } else {
-        res.status(404).json([]);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
 });
 
 router.put("/:id", (req, res) => {
@@ -67,17 +67,23 @@ router.put("/:id", (req, res) => {
     res.status(400);
   }
 
-  Actions.update(req.params.id, req.body)
-    .then((action) => {
-      if (action) {
-        res.status(200).json(action);
-      } else {
-        res.status(404).json([]);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
+  Projects.get(req.body.project_id).then((project) => {
+    if (!project) {
+      res.status(404).json({ message: "project not found" });
+    } else {
+      Actions.update(req.params.id, req.body)
+        .then((action) => {
+          if (action) {
+            res.status(200).json(action);
+          } else {
+            res.status(404).json([]);
+          }
+        })
+        .catch((err) => {
+          res.status(500).json({ message: err.message });
+        });
+    }
+  });
 });
 
 module.exports = router;
