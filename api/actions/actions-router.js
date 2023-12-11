@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
       res.status(200).json(actions);
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).send();
     });
 });
 
@@ -24,11 +24,11 @@ router.get("/:id", (req, res) => {
       if (action) {
         res.status(200).json(action);
       } else {
-        res.status(404).json([]);
+        res.status(404).send();
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).send();
     });
 });
 
@@ -42,7 +42,7 @@ router.post("/", (req, res, next) => {
 
   Projects.get(req.body.project_id).then((project) => {
     if (!project) {
-      res.status(404);
+      res.status(404).send();
       next();
     } else {
       Actions.insert(req.body)
@@ -50,11 +50,11 @@ router.post("/", (req, res, next) => {
           if (action) {
             res.status(201).json(action);
           } else {
-            res.status(404).json([]);
+            res.status(404).send();
           }
         })
         .catch((err) => {
-          res.status(500).json({ message: err.message });
+          res.status(500).send();
         });
     }
   });
@@ -70,7 +70,7 @@ router.put("/:id", (req, res, next) => {
 
   Projects.get(req.body.project_id).then((project) => {
     if (!project) {
-      res.status(404);
+      res.status(404).send();
       next();
     } else {
       Actions.update(req.params.id, req.body)
@@ -78,11 +78,11 @@ router.put("/:id", (req, res, next) => {
           if (action) {
             res.status(200).json(action);
           } else {
-            res.status(404).json([]);
+            res.status(404).send();
           }
         })
         .catch((err) => {
-          res.status(500).json({ message: err.message });
+          res.status(500).send();
         });
     }
   });
@@ -100,7 +100,7 @@ router.delete("/:id", (req, res, next) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).send();
     });
 });
 
