@@ -91,10 +91,11 @@ router.put("/:id", (req, res, next) => {
 router.delete("/:id", (req, res, next) => {
   Actions.remove(req.params.id)
     .then((action) => {
-      if (action) {
-        res.status(200);
+      if (!action) {
+        res.status(404).send();
+        next();
       } else {
-        res.status(404);
+        res.status(200).send();
         next();
       }
     })
