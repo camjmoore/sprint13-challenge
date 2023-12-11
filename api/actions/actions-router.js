@@ -32,17 +32,18 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
   const requiredFields = ["description", "notes", "project_id"];
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
-    res.status(400);
+    res.status(400).send();
   }
 
   Projects.get(req.body.project_id).then((project) => {
     if (!project) {
-      res.status(404).json({ message: "project not found" });
+      res.status(404);
+      next();
     } else {
       Actions.insert(req.body)
         .then((action) => {
@@ -59,17 +60,18 @@ router.post("/", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res, next) => {
   const requiredFields = ["description", "notes", "project_id"];
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
-    res.status(400);
+    res.status(400).send();
   }
 
   Projects.get(req.body.project_id).then((project) => {
     if (!project) {
-      res.status(404).json({ message: "project not found" });
+      res.status(404);
+      next();
     } else {
       Actions.update(req.params.id, req.body)
         .then((action) => {
@@ -86,13 +88,14 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res, next) => {
   Actions.remove(req.params.id)
     .then((action) => {
       if (action) {
         res.status(200);
       } else {
-        res.status(404).json({ message: "action not found" });
+        res.status(404);
+        next();
       }
     })
     .catch((err) => {
