@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).end();
     });
 });
 
@@ -25,11 +25,11 @@ router.get("/:id", (req, res) => {
       if (project) {
         res.status(200).json(project);
       } else {
-        res.status(404);
+        res.status(404).end();
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).end();
     });
 });
 
@@ -38,7 +38,7 @@ router.post("/", (req, res) => {
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
-    res.status(400);
+    res.status(400).end();
   }
 
   Projects.insert(req.body)
@@ -46,32 +46,33 @@ router.post("/", (req, res) => {
       if (project) {
         res.status(201).json(project);
       } else {
-        res.status(404);
+        res.status(404).end();
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).end();
     });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res, next) => {
   const requiredFields = ["name", "description"];
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
-    res.status(400);
+    res.sendStatus(400);
   }
 
   Projects.update(req.params.id, req.body)
     .then((project) => {
       if (project) {
         res.status(200).json(project);
+        next();
       } else {
-        res.status(404);
+        res.status(404).end();
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).end();
     });
 });
 
@@ -81,11 +82,11 @@ router.delete("/:id", (req, res) => {
       if (project) {
         res.status(200);
       } else {
-        res.status(404);
+        res.status(404).end();
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).end();
     });
 });
 
@@ -95,11 +96,11 @@ router.get("/:id/actions", (req, res) => {
       if (actions) {
         res.status(200).json(actions);
       } else {
-        res.status(404);
+        res.status(404).end();
       }
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      res.status(500).end();
     });
 });
 
