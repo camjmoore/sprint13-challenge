@@ -1,11 +1,11 @@
 // Write your "projects" router here!
-const express = require("express");
+const express = require('express');
 
-const Projects = require("./projects-model");
+const Projects = require('./projects-model');
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   Projects.get()
     .then((projects) => {
       if (projects) {
@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", (req, res) => {
+router.get('/:id', (req, res) => {
   Projects.get(req.params.id)
     .then((project) => {
       if (project) {
@@ -33,8 +33,8 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
-  const requiredFields = ["name", "description"];
+router.post('/', (req, res) => {
+  const requiredFields = ['name', 'description'];
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
@@ -54,19 +54,18 @@ router.post("/", (req, res) => {
     });
 });
 
-router.put("/:id", (req, res, next) => {
-  const requiredFields = ["name", "description"];
+router.put('/:id', (req, res) => {
+  const requiredFields = ['name', 'description', 'completed'];
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
-    res.sendStatus(400);
+    res.status(400).end();
   }
 
   Projects.update(req.params.id, req.body)
     .then((project) => {
       if (project) {
         res.status(200).json(project);
-        next();
       } else {
         res.status(404).end();
       }
@@ -76,11 +75,11 @@ router.put("/:id", (req, res, next) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete('/:id', (req, res) => {
   Projects.remove(req.params.id)
     .then((project) => {
       if (project) {
-        res.status(200);
+        res.status(200).end();
       } else {
         res.status(404).end();
       }
@@ -90,7 +89,7 @@ router.delete("/:id", (req, res) => {
     });
 });
 
-router.get("/:id/actions", (req, res) => {
+router.get('/:id/actions', (req, res) => {
   Projects.getProjectActions(req.params.id)
     .then((actions) => {
       if (actions) {
