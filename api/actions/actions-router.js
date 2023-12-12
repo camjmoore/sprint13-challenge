@@ -1,14 +1,14 @@
 // Write your "actions" router here!
 
-const express = require("express");
+const express = require('express');
 
-const Actions = require("./actions-model");
+const Actions = require('./actions-model');
 
-const Projects = require("../projects/projects-model");
+const Projects = require('../projects/projects-model');
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   Actions.get()
     .then((actions) => {
       res.status(200).json(actions);
@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", (req, res) => {
+router.get('/:id', (req, res) => {
   Actions.get(req.params.id)
     .then((action) => {
       if (action) {
@@ -32,8 +32,8 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
-  const requiredFields = ["description", "notes", "project_id"];
+router.post('/', (req, res) => {
+  const requiredFields = ['description', 'notes', 'project_id'];
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
@@ -59,8 +59,8 @@ router.post("/", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
-  const requiredFields = ["description", "notes", "project_id"];
+router.put('/:id', (req, res) => {
+  const requiredFields = ['description', 'notes', 'project_id'];
   const missing = requiredFields.filter((field) => !req.body[field]);
 
   if (missing.length) {
@@ -86,13 +86,13 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete('/:id', (req, res) => {
   Actions.remove(req.params.id)
     .then((action) => {
-      if (!action) {
-        res.status(404).end();
-      } else {
+      if (action) {
         res.status(200).end();
+      } else {
+        res.status(404).end();
       }
     })
     .catch((err) => {
