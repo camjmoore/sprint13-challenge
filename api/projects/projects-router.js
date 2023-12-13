@@ -2,6 +2,7 @@
 const express = require('express');
 
 const Projects = require('./projects-model');
+const { validateProject } = require ('./projects-middleware');
 
 const router = express.Router();
 
@@ -33,14 +34,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
-  const requiredFields = ['name', 'description'];
-  const missing = requiredFields.filter((field) => !req.body[field]);
-
-  if (missing.length) {
-    res.status(400).end();
-  }
-
+router.post('/', validateProject, (req, res) => {
   Projects.insert(req.body)
     .then((project) => {
       if (project) {
@@ -54,14 +48,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res) => {
-  const requiredFields = ['name', 'description', 'completed'];
-  const missing = requiredFields.filter((field) => !req.body[field]);
-
-  if (missing.length) {
-    res.status(400).end();
-  }
-
+router.put('/:id', validateProject, (req, res) => {
   Projects.update(req.params.id, req.body)
     .then((project) => {
       if (project) {

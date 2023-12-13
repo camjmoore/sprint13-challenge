@@ -6,6 +6,8 @@ const Actions = require('./actions-model');
 
 const Projects = require('../projects/projects-model');
 
+const { validateAction } = require('./actions-middlware');
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -32,14 +34,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
-  const requiredFields = ['description', 'notes', 'project_id'];
-  const missing = requiredFields.filter((field) => !req.body[field]);
-
-  if (missing.length) {
-    res.status(400).end();
-  }
-
+router.post('/', validateAction, (req, res) => {
   Projects.get(req.body.project_id).then((project) => {
     if (!project) {
       res.status(404).end();
@@ -59,14 +54,7 @@ router.post('/', (req, res) => {
   });
 });
 
-router.put('/:id', (req, res) => {
-  const requiredFields = ['description', 'notes', 'project_id'];
-  const missing = requiredFields.filter((field) => !req.body[field]);
-
-  if (missing.length) {
-    res.status(400).end();
-  }
-
+router.put('/:id', validateAction, (req, res) => {
   Projects.get(req.body.project_id).then((project) => {
     if (!project) {
       res.status(404).end();
